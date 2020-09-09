@@ -146,4 +146,21 @@ def Lotto():
 
     print(nums_Lotto)
     
-Lotto()
+# Lotto()
+
+
+import requests
+
+req_url = "https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=" + str(927)
+
+req_lotto = requests.get(req_url)
+
+lottoNo = req_lotto.json()
+
+new_lootoNo = {'No' : 927, 'No1' : lottoNo['drwtNo1'], 'No2' : lottoNo['drwtNo2'], 'No3' : lottoNo['drwtNo3'], 'No4' : lottoNo['drwtNo4'],
+                'No5' : lottoNo['drwtNo5'], 'No6' : lottoNo['drwtNo6'], 'BonusNo' : lottoNo['bnusNo']}
+
+new_lootoNo1 = {'No' : 926, 'No1' : lottoNo['drwtNo1'], 'No2' : lottoNo['drwtNo2'], 'No3' : lottoNo['drwtNo3'], 'No4' : lottoNo['drwtNo4'],
+                'No5' : lottoNo['drwtNo5'], 'No6' : lottoNo['drwtNo6'], 'BonusNo' : lottoNo['bnusNo']}
+
+print(new_lootoNo)
