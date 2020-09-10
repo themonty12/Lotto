@@ -1,2 +1,2 @@
 # Lotto
-Random Lotto number extraction
+Random Lotto number generator
