@@ -150,17 +150,76 @@ def Lotto():
 
 
 import requests
+import json
+import os
+from bs4 import BeautifulSoup
 
-req_url = "https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=" + str(927)
+
+req_url = "https://dhlottery.co.kr/common.do?method=main"
 
 req_lotto = requests.get(req_url)
 
-lottoNo = req_lotto.json()
+soup = BeautifulSoup(req_lotto.content, 'html.parser')
 
-new_lootoNo = {'No' : 927, 'No1' : lottoNo['drwtNo1'], 'No2' : lottoNo['drwtNo2'], 'No3' : lottoNo['drwtNo3'], 'No4' : lottoNo['drwtNo4'],
-                'No5' : lottoNo['drwtNo5'], 'No6' : lottoNo['drwtNo6'], 'BonusNo' : lottoNo['bnusNo']}
+cur_lotto_num = soup.select("#lottoDrwNo")[0].get_text()
 
-new_lootoNo1 = {'No' : 926, 'No1' : lottoNo['drwtNo1'], 'No2' : lottoNo['drwtNo2'], 'No3' : lottoNo['drwtNo3'], 'No4' : lottoNo['drwtNo4'],
-                'No5' : lottoNo['drwtNo5'], 'No6' : lottoNo['drwtNo6'], 'BonusNo' : lottoNo['bnusNo']}
 
-print(new_lootoNo)
+# json 파일 만들기
+if os.path.isfile("./Lotto.json"):
+    with open('./Lotto.json', 'r') as f:
+        lotto_nums = json.load(f)
+    if not cur_lotto_num in lotto_nums.keys():
+        print(cur_lotto_num)
+        for i in range(int(cur_lotto_num), int(list(lotto_nums.keys())[0]), -1):
+            print(i)
+
+        req_url = "https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=" + str(i)
+
+        req_lotto = requests.get(req_url)
+
+        lottoNo = req_lotto.json()
+
+        lotto_nums[str(i)] = {'No1' : lottoNo['drwtNo1'], 'No2' : lottoNo['drwtNo2'], 'No3' : lottoNo['drwtNo3'], 'No4' : lottoNo['drwtNo4'],
+                    'No5' : lottoNo['drwtNo5'], 'No6' : lottoNo['drwtNo6'], 'BonusNo' : lottoNo['bnusNo']}
+
+        lotto_nums = dict(sorted(lotto_nums.items(), reverse=True))
+
+        file_path = "./Lotto.json"
+
+        with open(file_path, 'w') as outfile:
+            json.dump(lotto_nums, outfile)
+
+    else:
+        print("존재")
+else:
+    lotto_nums = {}
+
+    for i in range(int(cur_lotto_num), 0, -1):
+        print(i)
+
+        req_url = "https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=" + str(i)
+
+        req_lotto = requests.get(req_url)
+
+        lottoNo = req_lotto.json()
+
+        lotto_nums[i] = {'No1' : lottoNo['drwtNo1'], 'No2' : lottoNo['drwtNo2'], 'No3' : lottoNo['drwtNo3'], 'No4' : lottoNo['drwtNo4'],
+                    'No5' : lottoNo['drwtNo5'], 'No6' : lottoNo['drwtNo6'], 'BonusNo' : lottoNo['bnusNo']}
+
+    # print(lotto_nums)
+
+    file_path = "./Lotto.json"
+
+    with open(file_path, 'w') as outfile:
+        json.dump(lotto_nums, outfile)
+
+
+
+# new_lootoNo = {927 : {'No1' : lottoNo['drwtNo1'], 'No2' : lottoNo['drwtNo2'], 'No3' : lottoNo['drwtNo3'], 'No4' : lottoNo['drwtNo4'],
+#                 'No5' : lottoNo['drwtNo5'], 'No6' : lottoNo['drwtNo6'], 'BonusNo' : lottoNo['bnusNo']}}
+
+# new_lootoNo1 = {'No' : 926, 'No1' : lottoNo['drwtNo1'], 'No2' : lottoNo['drwtNo2'], 'No3' : lottoNo['drwtNo3'], 'No4' : lottoNo['drwtNo4'],
+#                 'No5' : lottoNo['drwtNo5'], 'No6' : lottoNo['drwtNo6'], 'BonusNo' : lottoNo['bnusNo']}
+
+# print(new_lootoNo)
+
