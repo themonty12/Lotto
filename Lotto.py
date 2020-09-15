@@ -8,12 +8,13 @@ import os
 
 def main():
     create_Lotto_json()
-    Lotto()
+    Lotto(1, True)
     # temp()
     
 
 # 로또 번호 추출 Main
-def Lotto(edge = 3, end_nums = [(1, 1), (7, 1)]):    
+def Lotto(edge = 3, edge_result = False, end_nums = [(1, 1), (7, 1)]):    
+    print(edge)
     old_Lotto_numbers = get_list_LottoNums()
     nums_Lotto = []
     while len(nums_Lotto) < 5:
@@ -21,21 +22,20 @@ def Lotto(edge = 3, end_nums = [(1, 1), (7, 1)]):
         
         if num_Lotto not in old_Lotto_numbers:
             # 모서리 패턴 체크 확인            
-            # if 모서리 패턴 Checked = True:
-                # if not edge_num(num_Lotto, edge):
-                    # continue
-            
+            if edge_result:
+                if not edge_num(num_Lotto, edge):
+                    continue
+
+            nums_Lotto.append(num_Lotto)                          
             # if 끝수 패턴 Checked = True:
                 # if not edn_num(num_Lotto, end_nums):
                     # continue
             
             # nums_Lotto.append(num_Lotto)
                     
-            if edge_num(num_Lotto, edge) and end_num(num_Lotto, end_nums):
-                #and 끝수 :
-                nums_Lotto.append(num_Lotto)                          
-            else:                
-                continue 
+            # if edge_num(num_Lotto, edge) and end_num(num_Lotto, end_nums):
+                #and 끝수 :               
+
     return nums_Lotto
     # print(nums_Lotto)
 
@@ -137,9 +137,9 @@ def edge_num(numbers, edge):
     edge_numbers = [1, 2, 8, 9, 6, 7, 13, 14, 29, 30, 36, 37, 34, 35, 41, 42]
     count = 0
     for num in numbers:
-        if num*1.in(edge_numbers):
+        if num in(edge_numbers):
             count += 1
-    result = True if count > 0 and count < edge else False
+    result = True if count > 0 and count <= edge else False
     return result
 
 # 모서리 개수 출력    
