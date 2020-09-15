@@ -124,6 +124,8 @@ def end_num_print(numbers):
     for num in numbers:
         num = num % 10
         end_num_dict[num] += 1
+
+    end_num_dict = {key : val for key, val in end_num_dict.items() if val != 0}
     
     return end_num_dict
     
@@ -223,6 +225,13 @@ def get_list_LottoNums():
     
     old_lotto_nums = list(val for val in lotto_nums.values())
     return old_lotto_nums
+
+# 제작한 json 파일을 Dict로 변환
+def get_dict_LottoNums():
+    file_path = "./Lotto.json"
+    with open(file_path, 'r') as f:
+        lotto_nums = json.load(f)
+    return lotto_nums
 
 
 
